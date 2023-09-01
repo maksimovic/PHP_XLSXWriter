@@ -1,3 +1,6 @@
 vendor
 .idea
 examples/*.xlsx
+build
+.phpunit.result.cache
+.DS_Store

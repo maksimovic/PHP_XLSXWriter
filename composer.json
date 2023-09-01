@@ -7,13 +7,14 @@
     "license": "MIT",
 
     "autoload": {
-        "classmap": ["xlsxwriter.class.php"]
+        "classmap": ["src"]
     },
     "require-dev": {
-        "phpunit/phpunit": "4.3.*"
+        "phpunit/phpunit": "^8.5 | ^9.5"
     },
     "require": {
-        "php": ">=5.2.1",
-        "ext-zip": "*"
+        "php": "^7.2 | ^8.0",
+        "ext-zip": "*",
+        "phan/phan": "^5.4"
     }
 }
