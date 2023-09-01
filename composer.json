@@ -17,5 +17,8 @@
     },
     "suggest": {
         "phan/phan": "^5.4"
+    },
+    "replace": {
+        "mk-j/php_xlsxwriter": "*"
     }
 }
