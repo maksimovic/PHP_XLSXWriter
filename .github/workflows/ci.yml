@@ -1,0 +1,39 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+    name: PHP ${{ matrix.php-versions }} Test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: xdebug, zip
+          tools: composer
+          coverage: xdebug
+
+      - name: Install composer and dependencies
+        run: composer install
+
+      - name: PHPUnit Tests
+        env:
+          XDEBUG_MODE: coverage
+        run: vendor/bin/phpunit tests --coverage-clover ./coverage.xml
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ./coverage.xml
+          verbose: true
