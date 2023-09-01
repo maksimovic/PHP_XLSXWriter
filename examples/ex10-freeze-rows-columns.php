@@ -1,6 +1,5 @@
 <?php
-set_include_path( get_include_path().PATH_SEPARATOR."..");
-include_once("xlsxwriter.class.php");
+
 
 $chars = 'abcdefgh';
 
@@ -12,10 +11,10 @@ for($i=0; $i<250; $i++)
 {
     $writer->writeSheetRow('Sheet1', array(
         str_shuffle($chars),
-        rand()%10000,
-        rand()%10000,
-        rand()%10000,
-        rand()%10000
+        mt_rand()%10000,
+        mt_rand()%10000,
+        mt_rand()%10000,
+        mt_rand()%10000
     ));
 }
 $writer->writeToFile('xlsx-freeze-rows-columns.xlsx');

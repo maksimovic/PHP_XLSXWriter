@@ -1,7 +1,4 @@
 <?php
-set_include_path( get_include_path().PATH_SEPARATOR."..");
-include_once("xlsxwriter.class.php");
-
 $header = array(
   'c1-text'=>'string',//text
   'c2-text'=>'@',//text

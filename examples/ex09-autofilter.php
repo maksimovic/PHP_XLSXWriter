@@ -1,6 +1,5 @@
 <?php
-set_include_path( get_include_path().PATH_SEPARATOR."..");
-include_once("xlsxwriter.class.php");
+
 
 $chars = 'abcdefgh';
 
@@ -12,8 +11,8 @@ for($i=0; $i<1000; $i++)
 {
     $writer->writeSheetRow('Sheet1', array(
         str_shuffle($chars),
-        rand()%10000,
-        date('Y-m-d H:i:s',time()-(rand()%31536000))
+        mt_rand()%10000,
+        date('Y-m-d H:i:s',time()-(mt_rand()%31536000))
     ));
 }
 $writer->writeToFile('xlsx-autofilter.xlsx');
