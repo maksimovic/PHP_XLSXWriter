@@ -1,9 +1,12 @@
 This is a fork of `mk-j/php_xlsxwriter` compatible with PHP 7.2/3/4 and 8.0/1/2
 
 [![codecov](https://codecov.io/github/maksimovic/PHP_XLSXWriter/graph/badge.svg?token=XKhvjEUAZQ)](https://codecov.io/github/maksimovic/PHP_XLSXWriter)
+![master](https://github.com/maksimovic/PHP_XLSXWriter/actions/workflows/ci.yml/badge.svg?branch=master)
 
 PHP_XLSXWriter
 ==============
+
+Installation: `composer require maksimovic/php-xlsx-writer`
 
 This library is designed to be lightweight, and have minimal memory usage.
 
