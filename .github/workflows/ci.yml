@@ -19,21 +19,16 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: xdebug, zip
+          tools: composer
+          coverage: xdebug
 
       - name: Install composer and dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_extensions: zip
+        run: composer install
 
       - name: PHPUnit Tests
-        uses: php-actions/phpunit@v3
         env:
           XDEBUG_MODE: coverage
-        with:
-          bootstrap: vendor/autoload.php
-          configuration: phpunit.xml
-          version: 8
-          args: tests --coverage-clover ./coverage.xml
+        run: vendor/bin/phpunit tests --coverage-clover ./coverage.xml
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
