@@ -1,10 +1,12 @@
+This is a fork of `mk-j/php_xlsxwriter` compatible with PHP 7.2/3/4 and 8.0/1/2
+
 PHP_XLSXWriter
 ==============
 
 This library is designed to be lightweight, and have minimal memory usage.
 
 It is designed to output an Excel compatible spreadsheet in (Office 2007+) xlsx format, with just basic features supported:
-* supports PHP 5.2.1+
+* supports PHP ~~5.2.1+~~ 7.2+ and 8.0+
 * takes UTF-8 encoded input
 * multiple worksheets
 * supports currency/date/numeric cell formatting, simple formulas
