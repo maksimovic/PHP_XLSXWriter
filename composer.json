@@ -1,9 +1,9 @@
 {
-    "name": "maksimovic/php_xlsx-writer",
+    "name": "maksimovic/php-xlsx-writer",
     "description": "PHP Library to write XLSX files",
     "keywords": ["php", "library","xls", "xlsx", "excel"],
     "type": "library",
-    "homepage": "https://github.com/mk-j/PHP_XLSXWriter",
+    "homepage": "https://github.com/maksimovic/PHP_XLSXWriter",
     "license": "MIT",
     "autoload": {
         "classmap": ["src"]
