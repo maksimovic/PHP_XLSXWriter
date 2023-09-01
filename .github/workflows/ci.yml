@@ -6,6 +6,7 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php-versions: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
     name: PHP ${{ matrix.php-versions }} Test
@@ -17,6 +18,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
+          extensions: xdebug, zip
 
       - name: Install composer and dependencies
         uses: php-actions/composer@v6
@@ -28,7 +30,6 @@ jobs:
         with:
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
-          php_extensions: xdebug
           version: 8
           args: tests --coverage-clover ./coverage.xml
 
