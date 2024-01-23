@@ -31,7 +31,7 @@ class XLSXWriter
     protected $number_formats = array();
 
     /** @var int */
-    private $tabRatio = 600;
+    protected $tabRatio = 600;
 
     public function __construct()
     {

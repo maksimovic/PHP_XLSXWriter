@@ -7,7 +7,7 @@ class WriterTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        $this->writer = new XLSXWriter();
+        $this->writer = new TestXLSWriter();
     }
 
     public function testCreate(): void
@@ -29,11 +29,21 @@ class WriterTest extends \PHPUnit\Framework\TestCase
         $this->writer->setRightToLeft(false);
 
         $this->writer->setTitle('Some Title');
+        $this->writer->setTabRatio(2000);
+
+        // check that 1000 can't be exceeded
+        self::assertEquals(1000, $this->writer->getTabRatio());
+
+        $this->writer->setTabRatio(500);
+        self::assertEquals(500, $this->writer->getTabRatio());
+
         $this->writer->setSubject('Some Subject');
         $this->writer->setAuthor('Some Author');
         $this->writer->setCompany('Some Company');
         $this->writer->setKeywords(['some','interesting','keywords']);
         $this->writer->setDescription('Some interesting description');
+
+        $this->writer->writeSheetHeader("Test sheet", ['c1-text'=>'string'], ['widths'=>[null,null,null,40]]);
 
         $this->writer->writeSheetRow("Sheet1", array('2003','3', '33.3','2023-02-01 00:00:00','2012-12-31 00:00:00'), ['hidden' => false]);
         $this->writer->markMergedCell("Sheet1", "A", 2, "B", 3);
