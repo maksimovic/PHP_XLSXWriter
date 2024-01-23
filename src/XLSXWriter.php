@@ -36,7 +36,7 @@ class XLSXWriter
         date_default_timezone_get() or date_default_timezone_set('UTC');//php.ini missing tz, avoid warning
         is_writeable($this->tempFilename()) or self::log("Warning: tempdir ".sys_get_temp_dir()." not writeable, use ->setTempDir()");
         class_exists('ZipArchive') or self::log("Error: ZipArchive class does not exist");
-        $this->addCellStyle($number_format='GENERAL', $style_string=null);
+        $this->addCellStyle($number_format='General', $style_string=null);
     }
 
     public function setTitle($title='') { $this->title=$title; }
@@ -244,7 +244,7 @@ class XLSXWriter
 
             $sheet->file_writer->write('<row collapsed="false" customFormat="false" customHeight="false" hidden="false" ht="12.1" outlineLevel="0" r="' . ($sheet->row_count+1) . '">');
             foreach ($header_row as $c => $v) {
-                $cell_style_idx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle( 'GENERAL', json_encode(isset($style[0]) ? $style[$c] : $style) );
+                $cell_style_idx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle( 'General', json_encode(isset($style[0]) ? $style[$c] : $style) );
                 $this->writeCell($sheet->file_writer, $sheet->row_count, $c, $v, $number_format_type='n_string', $cell_style_idx);
             }
             $sheet->file_writer->write('</row>');
@@ -261,7 +261,7 @@ class XLSXWriter
         $this->initializeSheet($sheet_name);
         $sheet = &$this->sheets[$sheet_name];
         if (count($sheet->columns) < count($row)) {
-            $default_column_types = $this->initializeColumnTypes( array_fill($from=0, $until=count($row), 'GENERAL') );//will map to n_auto
+            $default_column_types = $this->initializeColumnTypes( array_fill($from=0, $until=count($row), 'General') );//will map to n_auto
             $sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
         }
 
@@ -498,7 +498,7 @@ class XLSXWriter
         foreach($this->number_formats as $i=>$v) {
             $file->write('<numFmt numFmtId="'.(164+$i).'" formatCode="'.self::xmlspecialchars($v).'" />');
         }
-        //$file->write(		'<numFmt formatCode="GENERAL" numFmtId="164"/>');
+        //$file->write(		'<numFmt formatCode="General" numFmtId="164"/>');
         //$file->write(		'<numFmt formatCode="[$$-1009]#,##0.00;[RED]\-[$$-1009]#,##0.00" numFmtId="165"/>');
         //$file->write(		'<numFmt formatCode="YYYY-MM-DD\ HH:MM:SS" numFmtId="166"/>');
         //$file->write(		'<numFmt formatCode="YYYY-MM-DD" numFmtId="167"/>');
@@ -778,17 +778,10 @@ class XLSXWriter
         return strtr(htmlspecialchars((string)$val, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE), $badchars, $goodchars);//strtr appears to be faster than str_replace
     }
     //------------------------------------------------------------------
-    public static function array_first_key(array $arr)
-    {
-        reset($arr);
-        $first_key = key($arr);
-        return $first_key;
-    }
-    //------------------------------------------------------------------
     private static function determineNumberFormatType($num_format)
     {
         $num_format = preg_replace("/\[(Black|Blue|Cyan|Green|Magenta|Red|White|Yellow)\]/i", "", $num_format);
-        if ($num_format=='GENERAL') return 'n_auto';
+        if ($num_format=='General') return 'n_auto';
         if ($num_format=='@') return 'n_string';
         if ($num_format=='0') return 'n_numeric';
         if (preg_match('/[H]{1,2}:[M]{1,2}(?![^"]*+")/i', $num_format)) return 'n_datetime';
