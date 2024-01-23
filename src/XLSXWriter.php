@@ -185,7 +185,9 @@ class XLSXWriter
         $i=0;
         if (!empty($col_widths)) {
             foreach($col_widths as $column_width) {
-                $sheet->file_writer->write(  '<col collapsed="false" hidden="false" max="'.($i+1).'" min="'.($i+1).'" style="0" customWidth="true" width="'.floatval($column_width).'"/>');
+				if ($column_width) {
+					$sheet->file_writer->write(  '<col collapsed="false" hidden="false" max="'.($i+1).'" min="'.($i+1).'" style="0" customWidth="true" width="'.((float) $column_width).'"/>');
+				}
                 $i++;
             }
         }
