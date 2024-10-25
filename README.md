@@ -1,4 +1,12 @@
-This is a fork of `mk-j/php_xlsxwriter` compatible with PHP 7.2/3/4 and 8.0/1/2
+This is a fork of `mk-j/php_xlsxwriter` compatible with PHP versions:
+- 7.2
+- 7.3
+- 7.4
+- 8.0
+- 8.1
+- 8.2
+- 8.3
+- 8.4
 
 [![codecov](https://codecov.io/github/maksimovic/PHP_XLSXWriter/graph/badge.svg?token=XKhvjEUAZQ)](https://codecov.io/github/maksimovic/PHP_XLSXWriter)
 ![master](https://github.com/maksimovic/PHP_XLSXWriter/actions/workflows/ci.yml/badge.svg?branch=master)
