@@ -20,11 +20,11 @@ $writer = new XLSXWriter();
 $writer->writeSheetHeader('Sheet1', $header);
 foreach($data1 as $row)
 	$writer->writeSheetRow('Sheet1', $row);
-$writer->finalizeSheet($subsetname, ['orientation' => 'landscape', 'header' => 'Custom printed header for Sheet 1 - '.  date('Y-m-d')]);
+$writer->finalizeSheet('Sheet1', ['orientation' => 'landscape', 'header' => 'Custom printed header for Sheet 1 - '.  date('Y-m-d')]);
 
 foreach($data2 as $row)
 	$writer->writeSheetRow('Sheet2', $row);
-$writer->finalizeSheet($subsetname, ['orientation' => 'portrait', 'header' => 'Custom printed header for Sheet 2 - '.  date('Y-m-d'), 'printOptions' => ['gridLines' => 'true']]);
+$writer->finalizeSheet('Sheet2', ['orientation' => 'portrait', 'header' => 'Custom printed header for Sheet 2 - '.  date('Y-m-d'), 'printOptions' => ['gridLines' => 'true']]);
 
 /*
 writeToFile calls finalizeSheet for all sheets as well, but finalizeSheet checks if it has been applied before, so you're good to go

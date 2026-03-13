@@ -337,7 +337,7 @@ class XLSXWriter
             ]
 
         ];
-        $options = array_merge($default_options, $options);
+        $options = array_replace_recursive($default_options, $options);
 
         $sheet = &$this->sheets[$sheet_name];
 
