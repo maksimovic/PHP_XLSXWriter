@@ -313,10 +313,31 @@ class XLSXWriter
         return array_key_exists($sheet_name, $this->sheets) ? $this->sheets[$sheet_name]->row_count : 0;
     }
 
-    protected function finalizeSheet($sheet_name)
+    public function finalizeSheet($sheet_name, $options = [])
     {
         if (empty($sheet_name) || $this->sheets[$sheet_name]->finalized)
             return;
+
+        $default_options = [
+            'orientation' => 'portrait',
+            'header' => '&C&A',
+            'footer' => '- &P -',
+            'paperSize' => '1',
+            'margins' => [
+                'left' => '0.5',
+                'right' => '0.5',
+                'top' => '1',
+                'bottom' => '1',
+                'header' => '0.5',
+                'footer' => '0.5',
+            ],
+            'printOptions' => [
+                'headings' => 'false',
+                'gridLines' => 'false'
+            ]
+
+        ];
+        $options = array_merge($default_options, $options);
 
         $sheet = &$this->sheets[$sheet_name];
 
@@ -336,12 +357,12 @@ class XLSXWriter
             $sheet->file_writer->write(    '<autoFilter ref="A1:' . $max_cell . '"/>');
         }
 
-        $sheet->file_writer->write(    '<printOptions headings="false" gridLines="false" gridLinesSet="true" horizontalCentered="false" verticalCentered="false"/>');
-        $sheet->file_writer->write(    '<pageMargins left="0.5" right="0.5" top="1.0" bottom="1.0" header="0.5" footer="0.5"/>');
-        $sheet->file_writer->write(    '<pageSetup blackAndWhite="false" cellComments="none" copies="1" draft="false" firstPageNumber="1" fitToHeight="1" fitToWidth="1" horizontalDpi="300" orientation="portrait" pageOrder="downThenOver" paperSize="1" scale="100" useFirstPageNumber="true" usePrinterDefaults="false" verticalDpi="300"/>');
+        $sheet->file_writer->write(    '<printOptions headings="' . $options['printOptions']['headings']. '" gridLines="' . $options['printOptions']['gridLines']. '" gridLinesSet="true" horizontalCentered="false" verticalCentered="false"/>');
+        $sheet->file_writer->write(    '<pageMargins left="' . $options['margins']['left']. '" right="' . $options['margins']['right']. '" top="' . $options['margins']['top']. '" bottom="' . $options['margins']['bottom']. '" header="' . $options['margins']['header']. '" footer="' . $options['margins']['footer']. '"/>');
+        $sheet->file_writer->write(    '<pageSetup blackAndWhite="false" cellComments="none" copies="1" draft="false" firstPageNumber="1" fitToHeight="1" fitToWidth="1" horizontalDpi="300" orientation="' . $options['orientation'] . '" pageOrder="downThenOver" paperSize="' . $options['paperSize'] . '" scale="100" useFirstPageNumber="true" usePrinterDefaults="false" verticalDpi="300"/>');
         $sheet->file_writer->write(    '<headerFooter differentFirst="false" differentOddEven="false">');
-        $sheet->file_writer->write(        '<oddHeader>&amp;C&amp;&quot;Times New Roman,Regular&quot;&amp;12&amp;A</oddHeader>');
-        $sheet->file_writer->write(        '<oddFooter>&amp;C&amp;&quot;Times New Roman,Regular&quot;&amp;12Page &amp;P</oddFooter>');
+        $sheet->file_writer->write(        '<oddHeader>' . self::xmlspecialchars($options['header']) . '</oddHeader>');
+        $sheet->file_writer->write(        '<oddFooter>' . self::xmlspecialchars($options['footer']) . '</oddFooter>');
         $sheet->file_writer->write(    '</headerFooter>');
         $sheet->file_writer->write('</worksheet>');
 
