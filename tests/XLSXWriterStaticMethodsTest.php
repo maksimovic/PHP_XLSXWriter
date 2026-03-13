@@ -42,7 +42,7 @@ class XLSXWriterStaticMethodsTest extends \PHPUnit\Framework\TestCase
     public function testSanitizeSheetnameEmptyReturnsFallback(): void
     {
         $result = XLSXWriter::sanitize_sheetname('');
-        $this->assertMatchesRegularExpression('/^Sheet\d{3}$/', $result);
+        $this->assertRegExp('/^Sheet\d{3}$/', $result);
     }
 
     // --- log ---
