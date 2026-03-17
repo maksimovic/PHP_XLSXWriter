@@ -7,6 +7,7 @@ This is a fork of `mk-j/php_xlsxwriter` compatible with PHP versions:
 - 8.2
 - 8.3
 - 8.4
+- 8.5
 
 [![codecov](https://codecov.io/github/maksimovic/PHP_XLSXWriter/graph/badge.svg?token=XKhvjEUAZQ)](https://codecov.io/github/maksimovic/PHP_XLSXWriter)
 ![master](https://github.com/maksimovic/PHP_XLSXWriter/actions/workflows/ci.yml/badge.svg?branch=master)
