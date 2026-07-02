@@ -409,7 +409,15 @@ class XLSXWriter
         if (!is_scalar($value) || $value==='') { //objects, array, empty
             $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'"/>');
         } elseif (is_string($value) && $value[0]=='='){
-            $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="s"><f>'.self::xmlspecialchars(ltrim($value, '=')).'</f></c>');
+			if ( str_starts_with($value, '=IMAGE') ) {
+				// =IMAGE() is a newer formula that currently requires the _xlfn. prefix to prevent 
+				// Excel from prepending an @ character between = and IMAGE. Using this formula will 
+				// also usually require clicking the button to accept remote data or modifying the 
+				// security permissions in Excel options to enable these formulas without prompting.
+				$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'"><f>_xlfn.'.self::xmlspecialchars(ltrim($value, '=')).'</f></c>');
+			} else {
+				$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="s"><f>'.self::xmlspecialchars(ltrim($value, '=')).'</f></c>');
+			}
         } elseif ($num_format_type=='n_date') {
             $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="n"><v>'.intval(self::convert_date_time($value)).'</v></c>');
         } elseif ($num_format_type=='n_datetime') {
