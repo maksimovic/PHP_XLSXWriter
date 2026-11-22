@@ -121,6 +121,6 @@ Basic cell styles have been available since version 0.30
 | color        | #RRGGBB, ie: #ff99cc or #f9c |
 | fill         | #RRGGBB, ie: #eeffee or #efe |
 | halign       | general, left, right, justify, center |
-| valign       | bottom, center, distributed |
+| valign       | bottom, center, distributed, top |
 
 
