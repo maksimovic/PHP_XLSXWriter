@@ -451,9 +451,13 @@ class XLSXWriter
                 $border_value = [];
 
                 $border_value['side'] = array_intersect(explode(",", $style['border']), $border_allowed);
-                if (isset($style['border-style']) && in_array($style['border-style'],$border_style_allowed))
+                if (isset($style['border-style']) && $bss = explode(",", $style['border-style']))
                 {
-                    $border_value['style'] = $style['border-style'];
+                    if(count($bss) == 1) $bss = array_merge($bss, $bss, $bss, $bss);//compatibility for single value style for multiple sides
+                    $border_value['style'] = [];
+                    foreach($border_value['side'] as $s) {
+                        if(($bs = array_shift($bss)) && in_array($bs, $border_style_allowed)) $border_value['style'][$s] = $bs;
+                    }
                 }
                 if (isset($style['border-color']) && is_string($style['border-color']) && $style['border-color'][0] === '#')
                 {
@@ -578,12 +582,14 @@ class XLSXWriter
         foreach($borders as $border) {
             if (!empty($border)) { //fonts have an empty placeholder in the array to offset the static xml entry above
                 $pieces = json_decode($border,true);
-                $border_style = !empty($pieces['style']) ? $pieces['style'] : 'hair';
                 $border_color = !empty($pieces['color']) ? '<color rgb="'.strval($pieces['color']).'"/>' : '';
                 $file->write('<border diagonalDown="false" diagonalUp="false">');
                 foreach (array('left', 'right', 'top', 'bottom') as $side)
                 {
                     $show_side = in_array($side,$pieces['side']) ? true : false;
+                    if ($show_side) {
+                        $border_style = $pieces['style'][$side] ?? 'hair';
+                    }
                     $file->write($show_side ? "<$side style=\"$border_style\">$border_color</$side>" : "<$side/>");
                 }
                 $file->write(  '<diagonal/>');
