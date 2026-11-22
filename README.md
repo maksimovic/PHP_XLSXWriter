@@ -65,6 +65,16 @@ foreach($data as $row)
 $writer->writeToFile('example.xlsx');
 ```
 
+Images from a URL with IMAGE():
+```php
+$writer = new XLSXWriter();
+$writer->writeSheetRow('Sheet1', array('=IMAGE("https://example.com/logo.png", "Logo")'));
+$writer->writeToFile('images.xlsx');
+```
+Excel only recognises IMAGE in a file as `_xlfn.IMAGE`; the library adds that prefix wherever IMAGE appears in a formula.
+Excel blocks images from the web until the user allows them in the bar at the top of the workbook, and shows `#BLOCKED!` until then.
+`examples/ex14-images.php` shows the sizing options.
+
 50000 rows: (1.4s, 0MB memory usage)
 ```php
 $writer = new XLSXWriter();
@@ -106,11 +116,11 @@ Basic cell styles have been available since version 0.30
 | font-size    | 8,9,10,11,12 ... |
 | font-style   | bold, italic, underline, strikethrough or multiple ie: 'bold,italic' |
 | border       | left, right, top, bottom,   or multiple ie: 'top,left' |
-| border-style | thin, medium, thick, dashDot, dashDotDot, dashed, dotted, double, hair, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot |
+| border-style | thin, medium, thick, dashDot, dashDotDot, dashed, dotted, double, hair, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, or one per side in the order border lists them ie: 'thick,thin'; sides without a style are hair |
 | border-color | #RRGGBB, ie: #ff99cc or #f9c |
 | color        | #RRGGBB, ie: #ff99cc or #f9c |
 | fill         | #RRGGBB, ie: #eeffee or #efe |
 | halign       | general, left, right, justify, center |
-| valign       | bottom, center, distributed |
+| valign       | bottom, center, distributed, top |
 
 

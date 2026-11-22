@@ -451,9 +451,9 @@ class XLSXWriter
                 $border_value = [];
 
                 $border_value['side'] = array_intersect(explode(",", $style['border']), $border_allowed);
-                if (isset($style['border-style']) && $bss = explode(",", $style['border-style']))
+                if (isset($style['border-style']) && is_string($style['border-style']) && $bss = explode(",", $style['border-style']))
                 {
-                    if(count($bss) == 1) $bss = array_merge($bss, $bss, $bss, $bss);//compatibility for single value style for multiple sides
+                    if(count($bss) == 1) $bss = array_fill(0, count($border_value['side']), $bss[0]);//a single style applies to every listed side
                     $border_value['style'] = [];
                     foreach($border_value['side'] as $s) {
                         if(($bs = array_shift($bss)) && in_array($bs, $border_style_allowed)) $border_value['style'][$s] = $bs;
