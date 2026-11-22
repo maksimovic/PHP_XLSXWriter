@@ -43,7 +43,6 @@
 		'font-style'     => 'bold',
 		'color'          => '#ffffff',
 		'fill'           => '#5800e8',
-		'supress_row'    => true,
 		'halign'         => 'center',
 	);
 	$header = array(
@@ -59,23 +58,19 @@
 			'wrap_text' => true,
 			'font'      => 'Courier New',
 			'color'     => '#5800e8',
-			'halign'    => 'top',
-			'height'    => 48,
+			'valign'    => 'top',
 		), 
 		array(
 			'wrap_text' => true,
-			'halign'    => 'top',
-			'height'    => 48,
+			'valign'    => 'top',
 		), 
 		array(
 			'wrap_text' => true,
-			'halign'    => 'top',
-			'height'    => 48,
+			'valign'    => 'top',
 		), 
 		array(
 			'wrap_text' => true,
-			'halign'    => 'top',
-			'height'    => 48,
+			'valign'    => 'top',
 		),
 		'height' => 128,
 	);
