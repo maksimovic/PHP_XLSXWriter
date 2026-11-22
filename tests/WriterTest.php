@@ -357,6 +357,42 @@ class WriterTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @dataProvider borderStyleProvider
+     */
+    public function testBorderStyles(array $style, string $expectedSides): void
+    {
+        $this->writer->writeSheetRow('Sheet1', ['x'], $style);
+        $fileName = $this->getTmpFileName();
+        $this->writer->writeToFile($fileName);
+
+        $zip = new ZipArchive();
+        $zip->open($fileName);
+        $stylesXml = $zip->getFromName('xl/styles.xml');
+        $zip->close();
+
+        preg_match_all('/<border diagonalDown[^>]*>(.*?)<diagonal\/>/', $stylesXml, $borders);
+        preg_match_all('/<(left|right|top|bottom)(?: style="([^"]*)")?/', end($borders[1]), $sides, PREG_SET_ORDER);
+        $actualSides = implode(' ', array_map(function ($side) {
+            return $side[1] . ':' . ($side[2] ?? '-');
+        }, $sides));
+
+        $this->assertSame($expectedSides, $actualSides);
+    }
+
+    public static function borderStyleProvider(): array
+    {
+        return [
+            'single style' => [['border' => 'left,right,top,bottom', 'border-style' => 'thick'], 'left:thick right:thick top:thick bottom:thick'],
+            'no style' => [['border' => 'left,right'], 'left:hair right:hair top:- bottom:-'],
+            'style per side' => [['border' => 'top,bottom', 'border-style' => 'thick,dashed'], 'left:- right:- top:thick bottom:dashed'],
+            'fewer styles than sides' => [['border' => 'left,right,top,bottom', 'border-style' => 'thin,thick'], 'left:thin right:thick top:hair bottom:hair'],
+            'side listed twice' => [['border' => 'left,left,right,top,bottom', 'border-style' => 'thick'], 'left:thick right:thick top:thick bottom:thick'],
+            'unknown style' => [['border' => 'left,right', 'border-style' => 'bogus'], 'left:hair right:hair top:- bottom:-'],
+            'style given as an array' => [['border' => 'left,right', 'border-style' => ['thin', 'thick']], 'left:hair right:hair top:- bottom:-'],
+        ];
+    }
+
     private function getTmpFileName(): string
     {
         return tempnam(sys_get_temp_dir(), 'xlsxWriter');
