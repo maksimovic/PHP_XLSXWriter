@@ -409,15 +409,7 @@ class XLSXWriter
         if (!is_scalar($value) || $value==='') { //objects, array, empty
             $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'"/>');
         } elseif (is_string($value) && $value[0]=='='){
-			if ( str_starts_with($value, '=IMAGE') ) {
-				// =IMAGE() is a newer formula that currently requires the _xlfn. prefix to prevent 
-				// Excel from prepending an @ character between = and IMAGE. Using this formula will 
-				// also usually require clicking the button to accept remote data or modifying the 
-				// security permissions in Excel options to enable these formulas without prompting.
-				$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'"><f>_xlfn.'.self::xmlspecialchars(ltrim($value, '=')).'</f></c>');
-			} else {
-				$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="s"><f>'.self::xmlspecialchars(ltrim($value, '=')).'</f></c>');
-			}
+            $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="s"><f>'.self::xmlspecialchars(self::addImageFunctionPrefix(ltrim($value, '='))).'</f></c>');
         } elseif ($num_format_type=='n_date') {
             $file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="n"><v>'.intval(self::convert_date_time($value)).'</v></c>');
         } elseif ($num_format_type=='n_datetime') {
@@ -824,6 +816,14 @@ class XLSXWriter
         static $badchars = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0b\x0c\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x7f";
         static $goodchars = "                              ";
         return strtr(htmlspecialchars((string)$val, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE), $badchars, $goodchars);//strtr appears to be faster than str_replace
+    }
+    //------------------------------------------------------------------
+    private static function addImageFunctionPrefix($formula)
+    {
+        // Excel only recognises IMAGE in a file as _xlfn.IMAGE; text inside quotes is left as written
+        return preg_replace_callback('/"[^"]*(?:""[^"]*)*"|\'[^\']*(?:\'\'[^\']*)*\'|(?<![\w.])IMAGE\(/i', function ($match) {
+            return $match[0][0] === '"' || $match[0][0] === "'" ? $match[0] : '_xlfn.IMAGE(';
+        }, $formula);
     }
     //------------------------------------------------------------------
     private static function determineNumberFormatType($num_format)

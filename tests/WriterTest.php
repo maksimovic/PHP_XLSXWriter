@@ -325,6 +325,38 @@ class WriterTest extends \PHPUnit\Framework\TestCase
         $this->assertFileExists($fileName);
     }
 
+    /**
+     * @dataProvider imageFormulaProvider
+     */
+    public function testImageFunctionPrefix(string $formula, string $expectedXml): void
+    {
+        $this->writer->writeSheetRow('Sheet1', [$formula]);
+        $fileName = $this->getTmpFileName();
+        $this->writer->writeToFile($fileName);
+
+        $zip = new ZipArchive();
+        $zip->open($fileName);
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+        $zip->close();
+
+        preg_match('/<c r="A1" s="\d+" t="s"><f>(.*?)<\/f><\/c>/', $sheetXml, $matches);
+        $this->assertSame($expectedXml, $matches[1] ?? null);
+    }
+
+    public static function imageFormulaProvider(): array
+    {
+        return [
+            'image' => ['=IMAGE("https://example.com/a.png")', '_xlfn.IMAGE(&quot;https://example.com/a.png&quot;)'],
+            'nested image' => ['=IFERROR(IMAGE(A2),"x")', 'IFERROR(_xlfn.IMAGE(A2),&quot;x&quot;)'],
+            'lowercase image' => ['=image(A2)', '_xlfn.IMAGE(A2)'],
+            'already prefixed' => ['=_xlfn.IMAGE(A2)', '_xlfn.IMAGE(A2)'],
+            'image inside a string' => ['="IMAGE(" & A2', '&quot;IMAGE(&quot; &amp; A2'],
+            'image inside a sheet name' => ["='IMAGE(1)'!A2", '&apos;IMAGE(1)&apos;!A2'],
+            'longer function name' => ['=MYIMAGE(A2)', 'MYIMAGE(A2)'],
+            'other formula' => ['=SUM(1,2)', 'SUM(1,2)'],
+        ];
+    }
+
     private function getTmpFileName(): string
     {
         return tempnam(sys_get_temp_dir(), 'xlsxWriter');
